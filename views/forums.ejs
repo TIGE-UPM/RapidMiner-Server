@@ -16,7 +16,8 @@
 <form method='POST' action='/rapid' id="course" enctype="application/x-www-form-urlencoded">
 <input type="hidden" value=<%=url%> name='url'>
 <input type="hidden" value=<%=token%> name='token'>
-<input type="hidden" value=<%=array%> name='workshops'>
+<input type="hidden" value=<%=array%> name='foros'>
+<input type="hidden" value=<%=arrayW%> name='wikis'>
 <input type="hidden" value=<%=courseid%> name='courseid'>
 <div class="row">
 <div class="col-md-3">
@@ -24,7 +25,7 @@
 </div>
 <br></br>
 <div class="col-md-3">
-<select id="id" name="id"></select>
+<select id="id" name="foros"></select>
 <script type="text/javascript">
 var arrays = <%- JSON.stringify(array) %>;
 for(i=0;i<arrays.length;i++){
@@ -36,9 +37,22 @@ for(i=0;i<arrays.length;i++){
 </script>
 <br></br>
 <br></br>
+<select id="wikis" name="wikis"></select>
+<script type="text/javascript">
+var arraysW = <%- JSON.stringify(arrayW) %>;
+for(i=0;i<arraysW.length;i++){
+  var opt = document.createElement("option");
+  opt.text = arraysW[i].wikiid+'-'+arraysW[i].wikiname;
+  opt.value = arraysW[i].wikiid;
+  document.getElementById("wikis").add(opt,0);
+}
+</script>
+<br></br>
 <br></br>
 <input type = "radio" name = "check" value = "table" /> Opción 1: Visualizar tabla
+<br></br>
 <input type = "radio" name = "check" value = "excel" /> Opción 2: Descargar excel
+<br></br>
 <input type="submit" value="Mostrar" padding= 200px> 
 </div></div>
 </form>
