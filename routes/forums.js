@@ -41,11 +41,9 @@ exports.getForums = (req, res) =>{
                     'wstoken': req.body.token,
                     }
                 }
-                console.log(optionsWiki)
                 request(optionsWiki, (error, response, body) =>{
                     if (!error && response.statusCode == 200) {
                         var responseWiki = JSON.parse(body);
-                        console.log(responseWiki)
                         for (let wiki of responseWiki.wikis) {
                             arrayWikis.push({
                             wikiid: wiki.id,
@@ -61,10 +59,16 @@ exports.getForums = (req, res) =>{
                                 'wstoken': req.body.token,
                             }
                         }
-                        console.log(optionsAssignment)
                         request(optionsAssignment, (error, response, body) =>{
                             if (!error && response.statusCode == 200) {
                                 var responseAssessment = JSON.parse(body);
+                                console.log(responseAssessment);
+                                if(responseAssessment.warnings[0]!=null){
+                                    if(responseAssessment.warnings[0].warningcode=="2"){
+                                        res.render('error');
+                                    }
+                                }else{
+                                console.log(responseAssessment.courses[0])
                                 var responseAssignment = responseAssessment.courses[0].assignments;
                                 console.log(responseAssessment.courses[0].assignments);
                                 for (let assign of responseAssignment) {
@@ -75,7 +79,26 @@ exports.getForums = (req, res) =>{
                                     courseid:courseid,
                                     });
                                 }
+                                if(arrayWikis.length==0){
+                                    arrayWikis.push({
+                                        wikiid: 0,
+                                        wikiname: "no data",
+                                    })
+                                }
+                                if(arrayAssigns.length==0){
+                                    arrayAssigns.push({
+                                        assignid: 0,
+                                        assignname: "no data",
+                                    })
+                                }
+                                if(arrayForums.length==0){
+                                    arrayForums.push({
+                                        forumid: 0,
+                                        forumname: "no data",
+                                    })
+                                }
                                 res.render('forums', {token:req.body.token, courseid:courseid, url:req.body.url,array:arrayForums, arrayW:arrayWikis, arrayA:arrayAssigns});
+                                }
                             }
                         });
 

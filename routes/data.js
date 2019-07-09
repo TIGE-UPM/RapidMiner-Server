@@ -3,6 +3,7 @@ var mysql = require('mysql');
 
 exports.sendData = async (req, res) =>{
     var courseid = req.body.courseid;
+    console.log(req.body)
     var forumid = req.body.foros[1];
     var wikiid = req.body.wikis[1];
     var assignid = 0;
@@ -27,40 +28,46 @@ exports.sendData = async (req, res) =>{
     var instanceWiki = 0; 
     var contextItem = 0;
     var opcion = req.body.check
-
-getInstanceForo(function(dataForo){
-  instanceForo = dataForo;
-  getInstanceWiki(function(dataWiki){
-    instanceWiki = dataWiki;
-    getContextForo(courseid, instanceForo, forumid, function(dataContextForo){
-      contextForo = dataContextForo;
-      getContextWiki(courseid, instanceWiki, wikiid, function(dataContextWiki){
-        contextWiki = dataContextWiki;
-        getInstanceAssign(cmid, function(dataInstanceAssign){
-          var instanceAssign=dataInstanceAssign;
-          getItemAssign(instanceAssign, function(dataItemAssign){
-            itemid=dataItemAssign;
-            var headers = {
-              'User-Agent': 'Super Agent/0.0.1',
-              'Content-Type': 'application/x-www-form-urlencoded'
-            }
-            //var url = '192.168.100.245:8080/api/rest/tokenservice';
-            if(opcion == "table"){
-              var url ='http://192.168.100.245:8080/api/rest/public/process/vistaTabla?&minCourseid='+courseid+'&minForum='+forumid+'&minContextForo='+contextForo+'&minContextWiki='+contextWiki+'&minPracticaId='+assignid+'&minItemId='+itemid;
-              //res.redirect('http://192.168.100.245:8080/api/rest/public/process/vistaTabla?minCourseid='+courseid+'&minForum='+forumid);
-              res.redirect(url);
-            }else{
-              var url ='http://192.168.100.245:8080/api/rest/public/process/DescargaExcel?&minCourseid='+courseid+'&minForum='+forumid+'&minContextForo='+contextForo+'&minContextWiki='+contextWiki+'&minPracticaId='+assignid+'&minItemId='+itemid;
-              //res.redirect('http://192.168.100.245:8080/api/rest/public/process/DescargaExcel?minCourseid='+courseid+'&minForum='+forumid);
-              res.redirect(url);
-            }
+if(forumid==0 || wikiid==0 || assignid==0){
+  if(opcion == "table"){
+    res.render('nodata')
+  }else{
+    res.render('nodata')
+  }
+}else{
+  getInstanceForo(function(dataForo){
+    instanceForo = dataForo;
+    getInstanceWiki(function(dataWiki){
+      instanceWiki = dataWiki;
+      getContextForo(courseid, instanceForo, forumid, function(dataContextForo){
+        contextForo = dataContextForo;
+        getContextWiki(courseid, instanceWiki, wikiid, function(dataContextWiki){
+          contextWiki = dataContextWiki;
+          getInstanceAssign(cmid, function(dataInstanceAssign){
+            var instanceAssign=dataInstanceAssign;
+            getItemAssign(instanceAssign, function(dataItemAssign){
+              itemid=dataItemAssign;
+              var headers = {
+                'User-Agent': 'Super Agent/0.0.1',
+                'Content-Type': 'application/x-www-form-urlencoded'
+              }
+              //var url = '192.168.100.245:8080/api/rest/tokenservice';
+              if(opcion == "table"){
+                var url ='http://192.168.100.245:8080/api/rest/public/process/vistaTabla?&minCourseid='+courseid+'&minForum='+forumid+'&minContextForo='+contextForo+'&minContextWiki='+contextWiki+'&minPracticaId='+assignid+'&minItemId='+itemid;
+                //res.redirect('http://192.168.100.245:8080/api/rest/public/process/vistaTabla?minCourseid='+courseid+'&minForum='+forumid);
+                res.redirect(url);
+              }else{
+                var url ='http://192.168.100.245:8080/api/rest/public/process/DescargaExcel?&minCourseid='+courseid+'&minForum='+forumid+'&minContextForo='+contextForo+'&minContextWiki='+contextWiki+'&minPracticaId='+assignid+'&minItemId='+itemid;
+                //res.redirect('http://192.168.100.245:8080/api/rest/public/process/DescargaExcel?minCourseid='+courseid+'&minForum='+forumid);
+                res.redirect(url);
+              }
+            });
           });
         });
       });
     });
   });
-});
-
+}
     
 };
 

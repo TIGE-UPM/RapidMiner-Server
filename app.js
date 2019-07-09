@@ -32,4 +32,7 @@ router.get('/index',routes.index);
 router.post('/connect', login.getToken);
 router.post('/forums', forums.getForums);
 router.post('/rapid', data.sendData);
+router.get('/logout',(req,res)=>{     
+            res.redirect('/');  
+});  
 module.exports = app;
