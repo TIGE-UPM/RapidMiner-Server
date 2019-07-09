@@ -11,6 +11,7 @@ exports.getForums = (req, res) =>{
     var courseid = req.body.id;
     var arrayForums = [];
     var arrayWikis = [];
+    var arrayAssigns = [];
     var options = {
             url: url,
             method: 'GET',
@@ -52,8 +53,35 @@ exports.getForums = (req, res) =>{
                             courseid:courseid,
                         });
                         }
-                    res.render('forums', {token:req.body.token, courseid:courseid, url:req.body.url,array:arrayForums, arrayW:arrayWikis});    
+                        var optionsAssignment = {
+                            url: req.body.url + '/webservice/rest/server.php?wsfunction=mod_assign_get_assignments&courseids[0]='+ courseid +'&moodlewsrestformat=json',
+                            method: 'GET',
+                            headers: headers,
+                            qs: {
+                                'wstoken': req.body.token,
+                            }
+                        }
+                        console.log(optionsAssignment)
+                        request(optionsAssignment, (error, response, body) =>{
+                            if (!error && response.statusCode == 200) {
+                                var responseAssessment = JSON.parse(body);
+                                var responseAssignment = responseAssessment.courses[0].assignments;
+                                console.log(responseAssessment.courses[0].assignments);
+                                for (let assign of responseAssignment) {
+                                    arrayAssigns.push({
+                                    assignid: assign.id,
+                                    assignname: assign.name,
+                                    assigncmid: assign.cmid,
+                                    courseid:courseid,
+                                    });
+                                }
+                                res.render('forums', {token:req.body.token, courseid:courseid, url:req.body.url,array:arrayForums, arrayW:arrayWikis, arrayA:arrayAssigns});
+                            }
+                        });
+
                     }
+                    //res.render('forums', {token:req.body.token, courseid:courseid, url:req.body.url,array:arrayForums, arrayW:arrayWikis, arrayA:arrayAssigns});    
+                
                 });
         }
     });

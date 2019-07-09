@@ -18,6 +18,7 @@
 <input type="hidden" value=<%=token%> name='token'>
 <input type="hidden" value=<%=array%> name='foros'>
 <input type="hidden" value=<%=arrayW%> name='wikis'>
+<input type="hidden" value=<%=arrayA%> name='assigns'>
 <input type="hidden" value=<%=courseid%> name='courseid'>
 <div class="row">
 <div class="col-md-3">
@@ -45,6 +46,18 @@ for(i=0;i<arraysW.length;i++){
   opt.text = arraysW[i].wikiid+'-'+arraysW[i].wikiname;
   opt.value = arraysW[i].wikiid;
   document.getElementById("wikis").add(opt,0);
+}
+</script>
+<br></br>
+<br></br>
+<select id="assigns" name="assigns"></select>
+<script type="text/javascript">
+var arraysA = <%- JSON.stringify(arrayA) %>;
+for(i=0;i<arraysA.length;i++){
+  var opt = document.createElement("option");
+  opt.text = arraysA[i].assignid+'-'+arraysA[i].assignname;
+  opt.value = [arraysA[i].assignid,arraysA[i].assigncmid];
+  document.getElementById("assigns").add(opt,0);
 }
 </script>
 <br></br>
